@@ -24,6 +24,7 @@ public class Main {
             System.out.println("\t2 - удалить таблицу student.");
             System.out.println("\t3 - добавить студента.");
             System.out.println("\t4 - отсортировать по имени.");
+            System.out.println("\t5 - найти по имени.");
 
             System.out.println("\t9 - выход.");
 
@@ -48,7 +49,7 @@ public class Main {
                     sortByName();
                     break;
                 case 5:
-                    System.out.println(" horoshego dnya");
+                    findStudentDyName();
                     break;
                 case 6:
                     System.out.println("Pora prochest' nescol'ko stranic");
@@ -172,4 +173,40 @@ public class Main {
             e.printStackTrace(System.out);
         }
     }
+
+    private void findStudentDyName() {
+        Scanner scanner = new Scanner(System.in);
+        String line;
+        while (true) {
+            System.out.println("Введите запрос");
+            line = scanner.next();
+            if (line != null) {
+                break;
+            } else {
+                System.out.println("Неверный ввод данных");
+            }
+        }
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db")) {
+
+            Statement statement = connection.createStatement();
+
+            String sql = String.format("SELECT * FROM student" +
+                    " WHERE name LIKE '%%%s%%'" +
+                    " ORDER BY name ASC", line);
+            ResultSet cursor = statement.executeQuery(sql);
+
+            while (cursor.next()) {
+                System.out.println("id = " + cursor.getInt("id"));
+                System.out.println("name = " + cursor.getString("name"));
+                System.out.println("age = " + cursor.getInt("age"));
+                System.out.println("gender = " + cursor.getBoolean("gender"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+
 }
+
