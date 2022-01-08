@@ -1,9 +1,6 @@
 package com.speranskaya;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
@@ -26,6 +23,7 @@ public class Main {
             System.out.println("\t1 - создать таблицу student.");
             System.out.println("\t2 - удалить таблицу student.");
             System.out.println("\t3 - добавить студента.");
+            System.out.println("\t4 - отсортировать по имени.");
 
             System.out.println("\t9 - выход.");
 
@@ -47,7 +45,7 @@ public class Main {
                     System.out.println("Студент добавлен");
                     break;
                 case 4:
-                    System.out.println("Ne zabud' zont");
+                    sortByName();
                     break;
                 case 5:
                     System.out.println(" horoshego dnya");
@@ -155,6 +153,23 @@ public class Main {
             break;
         }
         return student;
+    }
 
+    private void sortByName() {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db")) {
+            Statement statement = connection.createStatement();
+            ResultSet cursor = statement.executeQuery("SELECT * FROM student ORDER BY name ASC");
+            while (cursor.next()) {
+                System.out.println("id = " + cursor.getInt("id"));
+                System.out.println("name = " + cursor.getString("name"));
+                System.out.println("age = " + cursor.getInt("age"));
+                System.out.println("gender = " + cursor.getBoolean("gender"));
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
     }
 }
