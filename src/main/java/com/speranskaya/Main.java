@@ -25,6 +25,8 @@ public class Main {
             System.out.println("Выберите из следующих действий : ");
             System.out.println("\t1 - создать таблицу student.");
             System.out.println("\t2 - удалить таблицу student.");
+            System.out.println("\t3 - добавить студента.");
+
             System.out.println("\t9 - выход.");
 
             System.out.println("Сделайте свой выбор.");
@@ -40,7 +42,9 @@ public class Main {
                     System.out.println("Таблица удалена.");
                     break;
                 case 3:
-                    System.out.println("Mmmm otlichnye duhi.");
+                    Student student = inputStudent();
+                    insertStudent(student);
+                    System.out.println("Студент добавлен");
                     break;
                 case 4:
                     System.out.println("Ne zabud' zont");
@@ -90,14 +94,67 @@ public class Main {
         }
     }
 
-//    private void insertStudents(){
-//        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db")) {
-//            Statement statement = connection.createStatement();
-//            statement.executeUpdate("INSERT TABLE student VALUES");
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace(System.out);
-//        }
-//
-//    }
+    private void insertStudent(Student student) {
+
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db")) {
+            Statement statement = connection.createStatement();
+            String sql = String.format("INSERT INTO student VALUES(%d, '%s', %d, %b)"
+                    , student.id,
+                    student.name,
+                    student.age,
+                    student.gender);
+
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+
+    }
+
+    private Student inputStudent() {
+        Student student = new Student();
+        Scanner scan = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Введите ID(число)");
+            int number = scan.nextInt();
+            if (number > 0) {
+                student.id = number;
+                break;
+            } else {
+                System.out.println("Неверный ввод данных");
+            }
+        }
+
+        while (true) {
+
+            System.out.println("Введите имя (не больше ста символов)");
+            String line = scan.next();
+            if (line != null) {
+                student.name = line;
+                break;
+            } else {
+                System.out.println("Неверный ввод данных");
+            }
+        }
+
+        while (true) {
+            System.out.println("Введите возраст(число)");
+            int number2 = scan.nextInt();
+            if (number2 > 0) {
+                student.age = number2;
+                break;
+            } else {
+                System.out.println("Неверный ввод данных");
+            }
+        }
+
+        while (true) {
+            System.out.println("Введите пол(true - жен/false - муж)");
+            student.gender = scan.nextBoolean();
+            break;
+        }
+        return student;
+
+    }
 }
