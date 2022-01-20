@@ -16,6 +16,7 @@ public class DaoMain {
         try (Connection connection =
                      DriverManager.getConnection(SQLITE_CONNECTION_STRING)) {
             doSqlTasks(connection);
+
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -52,5 +53,10 @@ public class DaoMain {
         bookDao.insert(book);
 
         System.out.println("book: " + book);
+
+        authorDao.deleteAuthor(7);
+        System.out.println("authors: " + authors);
     }
+
+
 }

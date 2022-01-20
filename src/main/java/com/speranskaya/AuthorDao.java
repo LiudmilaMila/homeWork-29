@@ -109,4 +109,16 @@ public class AuthorDao {
             }
         }
     }
+
+    public void deleteAuthor(int id) throws SQLException {
+        if (id == 0) {
+            throw new IllegalArgumentException("ID is not set");
+        }
+        final String sql = "DELETE FROM author WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+        }
+    }
 }
