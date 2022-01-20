@@ -56,6 +56,9 @@ public class DaoMain {
 
         authorDao.deleteAuthor(7);
         System.out.println("authors: " + authors);
+
+        bookDao.deleteBook(12);
+
     }
 
 
