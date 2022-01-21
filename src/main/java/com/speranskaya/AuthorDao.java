@@ -121,4 +121,12 @@ public class AuthorDao {
             statement.executeUpdate();
         }
     }
+
+    private void deleteAuthorTable() throws SQLException {
+        try (Statement statement = connection.createStatement();) {
+
+            statement.executeUpdate("DROP TABLE author");
+        }
+    }
+
 }

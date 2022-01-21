@@ -123,5 +123,12 @@ public class BookDao {
         }
     }
 
+    private void deleteBookTable() throws SQLException {
+        try (Statement statement = connection.createStatement();) {
+
+            statement.executeUpdate("DROP TABLE book");
+        }
+    }
+
 
 }
