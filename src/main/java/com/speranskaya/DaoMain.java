@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class DaoMain2 {
+public class DaoMain {
     private static final String SQLITE_CONNECTION_STRING = "jdbc:sqlite:library.db";
 
     public static void main(String[] args) {
-        new DaoMain2().run();
+        new DaoMain().run();
     }
 
     private void run() {
