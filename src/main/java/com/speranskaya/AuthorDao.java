@@ -54,7 +54,6 @@ public class AuthorDao {
                     String.format("SELECT * FROM author WHERE name LIKE '%%%s%%'", text));
             while (cursor.next()) {
                 authors.add(createAuthorFromCursorIfPossible(cursor));
-
             }
         }
         return authors;
@@ -110,7 +109,7 @@ public class AuthorDao {
         }
     }
 
-    public void deleteAuthor(int id) throws SQLException {
+    public void deleteAuthorById(int id) throws SQLException {
         if (id == 0) {
             throw new IllegalArgumentException("ID is not set");
         }
@@ -122,11 +121,14 @@ public class AuthorDao {
         }
     }
 
-    private void deleteAuthorTable() throws SQLException {
-        try (Statement statement = connection.createStatement();) {
-
+    public void deleteAuthorTable() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE author");
         }
     }
-
+    public void truncateAuthorTable() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("TRUNCATE TABLE author");
+        }
+    }
 }

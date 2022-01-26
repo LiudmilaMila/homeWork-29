@@ -17,7 +17,7 @@ public class BookDao {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS book (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "title VARCHAR(100), " +
-                    "authorId INTEGER " +
+                    "authorID INTEGER " +
                     ")");
         }
     }
@@ -47,6 +47,7 @@ public class BookDao {
             }
         }
     }
+
     public Collection<Book> findByTitle(String text) throws SQLException {
         Collection<Book> books = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
@@ -59,6 +60,7 @@ public class BookDao {
         }
         return books;
     }
+
     private Book createBookFromCursorIfPossible(ResultSet cursor) throws SQLException {
         Book book = new Book();
         book.id = cursor.getInt("id");
@@ -87,7 +89,7 @@ public class BookDao {
             throw new IllegalArgumentException("ID is :" + book.id);
         }
         if (book.authorID == 0) {
-            throw new IllegalArgumentException("Book ID is not set.");
+            throw new IllegalArgumentException("Author ID is not set.");
         }
         final String sql = "INSERT INTO book (title, authorID) VALUES(?,?)";
 
@@ -111,6 +113,7 @@ public class BookDao {
             }
         }
     }
+
     public void deleteBook(int id) throws SQLException {
         if (id == 0) {
             throw new IllegalArgumentException("ID is not set");
@@ -123,12 +126,47 @@ public class BookDao {
         }
     }
 
-    private void deleteBookTable() throws SQLException {
+    public void deleteBookTable() throws SQLException {
         try (Statement statement = connection.createStatement();) {
 
             statement.executeUpdate("DROP TABLE book");
         }
     }
 
+    public void truncateBookTable() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("TRUNCATE TABLE book");
+        }
+    }
+
+    public Collection<Book> getBooksByAuthorId(int authorId) throws SQLException {
+        Collection<Book> books = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM book WHERE authorID = ?")) {
+            statement.setInt(1, authorId);
+
+            ResultSet cursor = statement.executeQuery();
+            while (cursor.next()) {
+                books.add(createBookFromCursorIfPossible(cursor));
+            }
+            return books;
+        }
+    }
+
+    public Collection<Book> findBooksByAuthorName(String text) throws SQLException {
+        Collection<Book> books = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT book.* FROM book +" +
+                        "JOIN author ON book.authorID = authorID " +
+                        "WHERE author.name LIKE = ?")) {
+            statement.setString(1, "%" + text + "%");
+
+            ResultSet cursor = statement.executeQuery();
+            while (cursor.next()) {
+                books.add(createBookFromCursorIfPossible(cursor));
+            }
+            return books;
+        }
+    }
 
 }

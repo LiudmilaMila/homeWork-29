@@ -7,6 +7,10 @@ public class User {
     public User() {
     }
 
+    public User(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public String toString() {
         return "User{" +

@@ -3,11 +3,12 @@ package com.speranskaya;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
-public class DaoUser {
+public class UserDao {
     private final Connection connection;
 
-    public DaoUser(Connection connection) {
+    public UserDao(Connection connection) {
         this.connection = connection;
     }
 
@@ -25,11 +26,23 @@ public class DaoUser {
             ResultSet cursor = statement.executeQuery("SELECT * FROM user");
             while (cursor.next()) {
                 users.add(createUserFromCursorIfPossible(cursor));
-
             }
         }
         return users;
 
+    }
+
+    public Optional<User> getByID(int id) throws SQLException {
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet cursor = statement.executeQuery(
+                    String.format("SELECT * FROM user WHERE id = %d", id));
+            if (cursor.next()) {
+                return Optional.of(createUserFromCursorIfPossible(cursor));
+            } else {
+                return Optional.empty();
+            }
+        }
     }
 
     private User createUserFromCursorIfPossible(ResultSet cursor) throws SQLException {
@@ -78,23 +91,40 @@ public class DaoUser {
         }
     }
 
-    private void deleteUserByID(int id) throws SQLException {
-            if (id == 0) {
-                throw new IllegalArgumentException("ID is not set");
-            }
-            final String sql = "DELETE FROM user WHERE id = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, id);
+    public void deleteUserByID(int id) throws SQLException {
+        if (id == 0) {
+            throw new IllegalArgumentException("ID is not set");
+        }
+        final String sql = "DELETE FROM user WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
 
-                statement.executeUpdate();
-            }
+            statement.executeUpdate();
+        }
     }
 
-    private void deleteUserTable() throws SQLException {
+    public void deleteUserTable() throws SQLException {
         try (Statement statement = connection.createStatement();) {
 
             statement.executeUpdate("DROP TABLE user");
         }
     }
 
+    public void truncateUserTable() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("TRUNCATE TABLE user");
+        }
+    }
+
+    public Collection<User> findByName(String text) throws SQLException {
+        Collection<User> users = new ArrayList<>();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet cursor = statement.executeQuery(
+                    String.format("SELECT * FROM user WHERE name LIKE '%%%s%%'", text));
+            while (cursor.next()) {
+                users.add(createUserFromCursorIfPossible(cursor));
+            }
+        }
+        return users;
+    }
 }

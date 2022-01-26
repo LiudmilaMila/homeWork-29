@@ -7,7 +7,12 @@ public class Message {
     public int bookId;
 
     public Message() {
+    }
 
+    public Message(String text, int userId, int bookId) {
+        this.text = text;
+        this.userId = userId;
+        this.bookId = bookId;
     }
 
     @Override
