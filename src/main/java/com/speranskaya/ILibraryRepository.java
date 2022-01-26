@@ -23,6 +23,8 @@ public interface ILibraryRepository {
     Collection<Book> findBooksByAuthorName(String name);
 
     Collection<Message> findMessagesByUserID(int id);
+
     Collection<Message> findMessagesByBookId(int id);
+
     Collection<Message> findMessagesByUserNickname(String nick);
 }

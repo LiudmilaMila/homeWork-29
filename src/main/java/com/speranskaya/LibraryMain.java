@@ -36,6 +36,6 @@ public class LibraryMain {
         messageDao.createTable();
         userDao.createTable();
 
-        return  new SqlLibraryRepository(bookDao,authorDao,messageDao,userDao);
+        return new SqlLibraryRepository(bookDao, authorDao, messageDao, userDao);
     }
 }

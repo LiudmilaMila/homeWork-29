@@ -126,6 +126,7 @@ public class AuthorDao {
             statement.executeUpdate("DROP TABLE author");
         }
     }
+
     public void truncateAuthorTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("TRUNCATE TABLE author");

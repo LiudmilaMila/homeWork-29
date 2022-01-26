@@ -170,7 +170,7 @@ public class MessageDao {
                 "SELECT * FROM message" +
                         " JOIN user ON message.userId = user.id " +
                         "WHERE user.nickname LIKE ? "
-        )){
+        )) {
             statement.setString(1, "%" + nick + "%");
 
             ResultSet cursor = statement.executeQuery();
