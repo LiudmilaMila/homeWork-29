@@ -24,4 +24,5 @@ public interface ILibraryRepository {
 
     Collection<Message> findMessagesByUserID(int id);
     Collection<Message> findMessagesByBookId(int id);
+    Collection<Message> findMessagesByUserNickname(String nick);
 }

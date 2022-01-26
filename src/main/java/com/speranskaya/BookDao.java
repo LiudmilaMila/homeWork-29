@@ -156,9 +156,9 @@ public class BookDao {
     public Collection<Book> findBooksByAuthorName(String text) throws SQLException {
         Collection<Book> books = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT book.* FROM book +" +
-                        "JOIN author ON book.authorID = authorID " +
-                        "WHERE author.name LIKE = ?")) {
+                "SELECT book.* FROM book " +
+                        "JOIN author ON book.authorID = author.id " +
+                        "WHERE author.name LIKE ?")) {
             statement.setString(1, "%" + text + "%");
 
             ResultSet cursor = statement.executeQuery();

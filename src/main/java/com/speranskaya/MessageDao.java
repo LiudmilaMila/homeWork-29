@@ -131,29 +131,13 @@ public class MessageDao {
     }
 
     public Collection<Message> findMessagesByUserID(int id) throws SQLException {
-            Collection<Message> messages = new ArrayList<>();
-
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM message +" +
-                            "JOIN user ON message.userId = userId " +
-                            "WHERE user.id LIKE = ?")) {
-                statement.setString(1, "%" + id + "%");
-
-                ResultSet cursor = statement.executeQuery();
-                while (cursor.next()) {
-                    messages.add(createMessageFromCursorIfPossible(cursor));
-                }
-                return messages;
-            }
-    }
-    public Collection<Message> findMessagesByBookId(int id) throws SQLException {
         Collection<Message> messages = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM message +" +
-                        "JOIN book ON message.bookId = bookId " +
-                        "WHERE user.id LIKE = ?")) {
-            statement.setString(1, "%" + id + "%");
+                        "JOIN user ON message.userId = user.id " +
+                        "WHERE user.id = ?")) {
+            statement.setInt(1, id);
 
             ResultSet cursor = statement.executeQuery();
             while (cursor.next()) {
@@ -163,4 +147,37 @@ public class MessageDao {
         }
     }
 
+    public Collection<Message> findMessagesByBookId(int id) throws SQLException {
+        Collection<Message> messages = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM message " +
+                        "JOIN book ON message.bookId = book.id " +
+                        "WHERE book.id = ?")) {
+            statement.setInt(1, id);
+
+            ResultSet cursor = statement.executeQuery();
+            while (cursor.next()) {
+                messages.add(createMessageFromCursorIfPossible(cursor));
+            }
+            return messages;
+        }
+    }
+
+    public Collection<Message> findMessagesByUserNickname(String nick) throws SQLException {
+        Collection<Message> messages = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM message" +
+                        " JOIN user ON message.userId = user.id " +
+                        "WHERE user.nickname LIKE ? "
+        )){
+            statement.setString(1, "%" + nick + "%");
+
+            ResultSet cursor = statement.executeQuery();
+            while (cursor.next()) {
+                messages.add(createMessageFromCursorIfPossible(cursor));
+            }
+        }
+        return messages;
+    }
 }

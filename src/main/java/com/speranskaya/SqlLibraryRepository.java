@@ -136,5 +136,12 @@ public class SqlLibraryRepository implements ILibraryRepository {
         }
     }
 
-
+    @Override
+    public Collection<Message> findMessagesByUserNickname(String nick) {
+        try {
+            return messageDao.findMessagesByUserNickname(nick);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find messages", e);
+        }
+    }
 }
